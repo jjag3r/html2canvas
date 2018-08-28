@@ -73,17 +73,34 @@ export default class CanvasRenderer implements RenderTarget<HTMLCanvasElement> {
     }
 
     drawImage(image: ImageElement, source: Bounds, destination: Bounds) {
-        this.ctx.drawImage(
-            image,
-            source.left,
-            source.top,
-            source.width,
-            source.height,
-            destination.left,
-            destination.top,
-            destination.width,
-            destination.height
-        );
+       
+       /**START CUSTOM CODE**/
+
+         var newWidth = 30;
+         var newHeight = 30;
+         var newX = destination.left;
+         var newY = destination.top;
+
+         // console.log(image, source, destination);
+         if (source.width/destination.width > source.height/destination.height) {
+             newWidth = destination.width;
+             newHeight = source.height * (destination.width / source.width);
+             newY = destination.top + (destination.height - newHeight) / 2;
+         } else {
+             newWidth = source.width * (destination.height / source.height);
+             newHeight = destination.height;
+             newX = destination.left + (destination.width - newWidth) / 2;
+         }
+       // console.log(newWidth, newHeight);
+
+         this.ctx.drawImage(image, source.left, source.top, source.width, source.height,
+           newX, newY,
+           newWidth, newHeight);
+         // destination.width,
+         // destination.height * (source.height / source.width)
+         //   destination.width, destination.height);
+
+       /**END CUSTOM CODE**/
     }
 
     drawShape(path: Path, color: Color) {
